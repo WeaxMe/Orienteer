@@ -10,6 +10,8 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import java.util.List;
 
@@ -20,7 +22,10 @@ import java.util.List;
  *            have no special needs here.
  */
 public class TabbedPanel<T extends ITab> extends org.apache.wicket.extensions.markup.html.tabs.TabbedPanel<T> {
-	
+
+	public static final CssResourceReference TABBED_PANEL_CSS       = new CssResourceReference(TabbedPanel.class, "tabbed-panel.js");
+	public static final JavaScriptResourceReference TABBED_PANEL_JS = new JavaScriptResourceReference(TabbedPanel.class, "tabbed-panel.js");
+
 	private boolean hideIfSingle=true;
 
 	public TabbedPanel(String id, List<T> tabs, IModel<Integer> model) {
@@ -54,9 +59,9 @@ public class TabbedPanel<T extends ITab> extends org.apache.wicket.extensions.ma
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.render(CssHeaderItem.forReference(TabsPanel.TABDROP_CSS));
-		response.render(JavaScriptHeaderItem.forReference(TabsPanel.TABDROP_JS));
-		response.render(OnDomReadyHeaderItem.forScript("$('#"+getMarkupId()+" > ul').tabdrop({text: '<i class=\"glyphicon glyphicon-align-justify\"></i>'});"));
+		response.render(CssHeaderItem.forReference(TABBED_PANEL_CSS));
+		response.render(JavaScriptHeaderItem.forReference(TABBED_PANEL_JS));
+		response.render(OnDomReadyHeaderItem.forScript(String.format("OrienteerTabbedPanel('%s')", getMarkupId())));
 	}
 	
 	@Override

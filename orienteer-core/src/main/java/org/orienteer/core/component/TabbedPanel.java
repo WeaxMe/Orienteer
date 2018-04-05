@@ -61,7 +61,7 @@ public class TabbedPanel<T extends ITab> extends org.apache.wicket.extensions.ma
 		super.renderHead(response);
 		response.render(CssHeaderItem.forReference(TABBED_PANEL_CSS));
 		response.render(JavaScriptHeaderItem.forReference(TABBED_PANEL_JS));
-		response.render(OnDomReadyHeaderItem.forScript(String.format("OrienteerTabbedPanel('%s')", getMarkupId())));
+		response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s>.card>.card-header>ul').tabbedPanel()", getMarkupId())));
 	}
 	
 	@Override

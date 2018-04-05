@@ -1,10 +1,9 @@
 
-function OrienteerTabbedPanel(id) {
+(function ($) {
 
-    function ODropdown(container, tabs) {
+    function ODropdown(container) {
         this.container = container;
-        this.tabs = tabs;
-        this.dropdown = $( document.createElement('li') );
+        this.dropdown = container.find('.last').first();
         this.currentTab = this.createCurrentTabElement();
         this.menu = this.createDropdownMenu();
     }
@@ -31,16 +30,14 @@ function OrienteerTabbedPanel(id) {
 
     ODropdown.prototype.createMenuItem = function (content) {
         return content.find('a').first()
-            .removeClass('nav-link')
             .addClass('dropdown-item');
     };
 
-    ODropdown.prototype.render = function () {
+    ODropdown.prototype.render = function (items) {
         var self = this;
         var i, element;
-        var onClick = self.createOnTabClick();
-        for (i = 0; i < self.tabs.length; i++) {
-            element = self.createMenuItem(self.tabs[i]);
+        for (i = 0; i < items.length; i++) {
+            element = self.createMenuItem(items[i]);
             if (element.hasClass('active')) {
                 self.setDisplayText(element.find('span').first().html());
             }
@@ -51,43 +48,66 @@ function OrienteerTabbedPanel(id) {
         self.container.append(self.dropdown);
     };
 
-    ODropdown.prototype.createOnTabClick = function () {
-        var self = this;
-        return function () {
-            var tab = $(this);
-            var text = tab.find('span').first().html();
-            self.setDisplayText(text);
-        };
-    };
-
     ODropdown.prototype.setDisplayText = function (text) {
         this.currentTab.find('span').first().replaceWith('<span>' + text + '</span>');
         this.currentTab.addClass('active');
         return this;
     };
 
-
-
-    function TabbedHandler() {
-        this.previousWidth = -1;
-        this.dropdown = null;
+    function OTabbedPanel(container) {
+        this.tabsContainer = container;
+        this.screenWidth = null;
+        this.tabs = this.searchTabs(this.tabsContainer);
+        this.dropdown = new ODropdown(this.tabsContainer);
     }
 
-    TabbedHandler.prototype.constructor = TabbedHandler;
-
-    TabbedHandler.prototype.handleTabsForCurrentScreen = function() {
+    OTabbedPanel.prototype.render = function () {
         var width = $(window).width();
-        if (width !== this.previousWidth) {
-            this.previousWidth = width;
-            var container = $('#' + id + '>.card>.card-header>ul');
-            var tabs = this.searchTabs(container);
-            var dropdownTabs = this.computeDropdownTabs(tabs, width);
-            this.dropdown = new ODropdown(container, dropdownTabs);
-            this.dropdown.render();
+        if (width !== this.screenWidth) {
+            var self = this;
+            self.screenWidth = width;
+            var dropdownTabs = self.computeDropdownTabs(self.tabs);
+            var tabs = self.tabs.slice(0, self.tabs.length - dropdownTabs.length);
+            if (dropdownTabs.length <= 1) {
+                return;
+            }
+            // tabs.forEach(function (tab) {
+            //     if (!tab.hasClass('nav-item')) {
+            //         var li = $( document.createElement('li') );
+            //         li.addClass('nav-item');
+            //         tab.removeClass('dropdown-item').addClass('nav-link');
+            //         li.addClass(tab);
+            //         self.tabsContainer.append(li);
+            //     }
+            // });
+
+            self.prepareDropdownTabs(dropdownTabs);
+            self.dropdown.render(dropdownTabs);
         }
     };
 
-    TabbedHandler.prototype.searchTabs = function (container) {
+    OTabbedPanel.prototype.computeDropdownTabs = function (allTabs) {
+        var max = this.searchMaxTabWidth(allTabs);
+        var availableWidth = this.screenWidth - max;
+        var firstWidth = allTabs[0].width();
+        var i;
+        for (i = 1; i < allTabs.length; i++) {
+            if (availableWidth <= firstWidth) {
+                break;
+            }
+            availableWidth -= allTabs[i].width();
+        }
+        return allTabs.slice(i - 1);
+    };
+
+    OTabbedPanel.prototype.prepareDropdownTabs = function (tabs) {
+        tabs.forEach(function(tab) {
+            tab.find('a').first().removeClass('nav-link');
+        });
+        return tabs;
+    };
+
+    OTabbedPanel.prototype.searchTabs = function (container) {
         var tabs = [];
         container.find('li').each(function () {
             tabs.push( $(this) );
@@ -95,22 +115,7 @@ function OrienteerTabbedPanel(id) {
         return tabs;
     };
 
-    TabbedHandler.prototype.computeDropdownTabs = function (tabs, containerWidth) {
-        var max = this.searchMaxTabWidth(tabs);
-        var availableWidth = containerWidth - max;
-        var firstWidth = tabs[0].width();
-        var i;
-        for (i = 1; i < tabs.length; i++) {
-            if (availableWidth <= firstWidth) {
-                break;
-            }
-            availableWidth -= tabs[i].width();
-        }
-
-        return tabs.slice(i - 1);
-    };
-
-    TabbedHandler.prototype.searchMaxTabWidth = function(tabs) {
+    OTabbedPanel.prototype.searchMaxTabWidth = function(tabs) {
         var max = tabs[0].width();
         var width;
         tabs.forEach(function (t) {
@@ -122,7 +127,13 @@ function OrienteerTabbedPanel(id) {
         return max;
     };
 
-    var handler = new TabbedHandler();
-    handler.handleTabsForCurrentScreen();
-    $(window).resize(handler.handleTabsForCurrentScreen);
-}
+
+    $.fn.tabbedPanel = function (options) {
+        return this.each(function () {
+            var panel = new OTabbedPanel( $(this) );
+            panel.render();
+            var callback = $.proxy(panel.render, panel);
+            $(window).resize(callback);
+        });
+    };
+})(jQuery);

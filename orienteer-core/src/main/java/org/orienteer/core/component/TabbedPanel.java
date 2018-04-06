@@ -23,8 +23,9 @@ import java.util.List;
  */
 public class TabbedPanel<T extends ITab> extends org.apache.wicket.extensions.markup.html.tabs.TabbedPanel<T> {
 
-	public static final CssResourceReference TABBED_PANEL_CSS       = new CssResourceReference(TabbedPanel.class, "tabbed-panel.js");
-	public static final JavaScriptResourceReference TABBED_PANEL_JS = new JavaScriptResourceReference(TabbedPanel.class, "tabbed-panel.js");
+	public static final CssResourceReference TABBED_PANEL_CSS          = new CssResourceReference(TabbedPanel.class, "tabbed-panel.js");
+	public static final JavaScriptResourceReference TABBED_PANEL_JS    = new JavaScriptResourceReference(TabbedPanel.class, "tabbed-panel.js");
+    public static final JavaScriptResourceReference ORIENTEER_DROPDOWN_JS = new JavaScriptResourceReference(TabbedPanel.class, "dropdown.js");
 
 	private boolean hideIfSingle=true;
 
@@ -61,6 +62,7 @@ public class TabbedPanel<T extends ITab> extends org.apache.wicket.extensions.ma
 		super.renderHead(response);
 		response.render(CssHeaderItem.forReference(TABBED_PANEL_CSS));
 		response.render(JavaScriptHeaderItem.forReference(TABBED_PANEL_JS));
+		response.render(JavaScriptHeaderItem.forReference(ORIENTEER_DROPDOWN_JS));
 		response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s>.card>.card-header>ul').tabbedPanel()", getMarkupId())));
 	}
 	

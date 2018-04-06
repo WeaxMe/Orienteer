@@ -1,86 +1,11 @@
 
 (function ($) {
 
-    function ODropdown(container) {
-        this.container = container;
-        this.dropdown = container.find('.last').first();
-        this.items = null;
-        this.currentTab = this.createCurrentTabElement();
-        this.menu = this.createDropdownMenu();
-    }
-
-    ODropdown.prototype.createCurrentTabElement = function () {
-        var a = $( document.createElement('a') );
-        a.attr({
-            'class': 'nav-link dropdown-toggle',
-            'data-toggle': 'dropdown',
-            'href': '#',
-            'role': 'button',
-            'aria-haspopup': 'true',
-            'aria-expanded': 'false'
-        });
-        a.append('<span></span>');
-        return a;
-    };
-
-    ODropdown.prototype.createDropdownMenu = function () {
-        var div = $( document.createElement('div') );
-        div.addClass('dropdown-menu');
-        return div;
-    };
-
-    ODropdown.prototype.prepareItem = function (item) {
-        return item.addClass('dropdown-item');
-    };
-
-    ODropdown.prototype.render = function () {
-        var self = this;
-        var i, element;
-        self.setVisible(true);
-        self.setDisplayText(null);
-        for (i = 0; i < self.items.length; i++) {
-            element = self.prepareItem(self.items[i]);
-            if (element.hasClass('active')) {
-                self.setDisplayText(element.find('span').first().html());
-            }
-            self.menu.append(element);
-        }
-        self.dropdown.append(self.currentTab);
-        self.dropdown.append(self.menu);
-        self.container.append(self.dropdown);
-
-    };
-
-    ODropdown.prototype.setDisplayText = function (text) {
-        if (text) {
-            this.currentTab.find('span').first().replaceWith('<span>' + text + '</span>');
-            this.currentTab.addClass('active');
-        } else {
-            this.currentTab.find('span').first().replaceWith('<span></span>');
-            this.currentTab.removeClass('active');
-        }
-        return this;
-    };
-
-    ODropdown.prototype.setItems = function (items) {
-        this.items = items;
-        return this;
-    };
-
-    ODropdown.prototype.setVisible = function (visible) {
-        if (this.currentTab) {
-            if (visible) {
-                this.currentTab.show();
-            } else this.currentTab.hide();
-        }
-        return this;
-    };
-
     function OTabbedPanel(container) {
         this.tabsContainer = container;
         this.screenWidth = null;
         this.tabs = this.searchTabs(this.tabsContainer);
-        this.dropdown = new ODropdown(this.tabsContainer);
+        this.dropdown = $(this.tabsContainer).orienteerDropdown();
     }
 
     OTabbedPanel.prototype.render = function () {
@@ -98,10 +23,9 @@
                     $(this).append(el);
                 }
             });
-            if (dropdownTabs.length > 0) {
-                self.dropdown.setItems(self.prepareDropdownTabs(dropdownTabs));
-                self.dropdown.render();
-            } else self.dropdown.setVisible(false);
+
+            self.dropdown.setItems(self.prepareDropdownTabs(dropdownTabs));
+            self.dropdown.render();
         }
     };
 
@@ -157,16 +81,7 @@
             var panel = new OTabbedPanel( $(this) );
             panel.render();
             var callback = $.proxy(panel.render, panel);
-            var lock = false;
-            $(window).resize(function() {
-                if (!lock) {
-                    lock = true;
-                    setTimeout(function() {
-                        callback();
-                        lock = false;
-                    }, 10);
-                }
-            });
+            $(window).resize(callback);
         });
     };
 })(jQuery);

@@ -10,6 +10,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
@@ -63,7 +64,8 @@ public class TabbedPanel<T extends ITab> extends org.apache.wicket.extensions.ma
 		response.render(CssHeaderItem.forReference(TABBED_PANEL_CSS));
 		response.render(JavaScriptHeaderItem.forReference(TABBED_PANEL_JS));
 		response.render(JavaScriptHeaderItem.forReference(ORIENTEER_DROPDOWN_JS));
-		response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s>.card>.card-header>ul').tabbedPanel()", getMarkupId())));
+		response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s>.card>.card-header>ul')" +
+				".tabbedPanel({'text':'%s'})", getMarkupId(), new ResourceModel("panel.tab.other").getObject())));
 	}
 	
 	@Override

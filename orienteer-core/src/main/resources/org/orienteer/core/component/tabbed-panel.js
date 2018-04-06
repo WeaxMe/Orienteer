@@ -1,11 +1,11 @@
 
 (function ($) {
 
-    function OTabbedPanel(container) {
+    function OTabbedPanel(container, options) {
         this.tabsContainer = container;
         this.screenWidth = null;
         this.tabs = this.searchTabs(this.tabsContainer);
-        this.dropdown = $(this.tabsContainer).orienteerDropdown();
+        this.dropdown = $(this.tabsContainer).orienteerDropdown(options ? options.text : null);
     }
 
     OTabbedPanel.prototype.render = function () {
@@ -78,7 +78,7 @@
 
     $.fn.tabbedPanel = function (options) {
         return this.each(function () {
-            var panel = new OTabbedPanel( $(this) );
+            var panel = new OTabbedPanel($(this), options);
             panel.render();
             var callback = $.proxy(panel.render, panel);
             $(window).resize(callback);

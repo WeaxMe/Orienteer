@@ -1,11 +1,13 @@
 (function () {
-    function ODropdown(container, prepareItemStrategy, generateCurrentItemStrategy) {
+    function ODropdown(container, currentItemText, prepareItemStrategy, generateCurrentItemStrategy) {
         this.container = container;
         this.prepareItem = prepareItemStrategy || defaultPrepareItemStrategy;
         this.dropdown = container.find('.last').first();
+        this.currentItemText = currentItemText;
         this.items = null;
         this.menu = this.createDropdownMenu();
-        this.currentItem = generateCurrentItemStrategy ? generateCurrentItemStrategy() : defaultCreateCurrentItemStrategy();
+        this.currentItem = generateCurrentItemStrategy ? generateCurrentItemStrategy(currentItemText) :
+            defaultCreateCurrentItemStrategy(currentItemText);
     }
 
     ODropdown.prototype.createDropdownMenu = function () {
@@ -19,11 +21,11 @@
         if (self.items && self.items.length > 0) {
             var i, element;
             self.setVisible(true);
-            self.setDisplayText(null);
+            self.setDisplayText(self.currentItemText);
             for (i = 0; i < self.items.length; i++) {
                 element = self.prepareItem(self.items[i]);
                 if (element.hasClass('active')) {
-                    self.setDisplayText(element.find('span').first().html());
+                    self.setDisplayText(element.find('span').first().html(), true);
                 }
                 self.menu.append(element);
             }
@@ -33,14 +35,10 @@
         } else self.setVisible(false);
     };
 
-    ODropdown.prototype.setDisplayText = function (text) {
-        if (text) {
-            this.currentItem.find('span').first().replaceWith('<span>' + text + '</span>');
-            this.currentItem.addClass('active');
-        } else {
-            this.currentItem.find('span').first().replaceWith('<span></span>');
-            this.currentItem.removeClass('active');
-        }
+    ODropdown.prototype.setDisplayText = function (text, active) {
+        this.currentItem.find('span').first().replaceWith(text ? '<span>' + text + '</span>' : '<span></span>');
+        if (active) this.currentItem.addClass('active');
+        else this.currentItem.removeClass('active');
         return this;
     };
 
@@ -76,7 +74,7 @@
         return a;
     }
 
-    $.fn.orienteerDropdown = function (prepareItemStrategy, generateCurrentItemStrategy) {
-        return new ODropdown(this, prepareItemStrategy, generateCurrentItemStrategy);
+    $.fn.orienteerDropdown = function (currentItemText, prepareItemStrategy, generateCurrentItemStrategy) {
+        return new ODropdown(this, currentItemText, prepareItemStrategy, generateCurrentItemStrategy);
     };
 })();

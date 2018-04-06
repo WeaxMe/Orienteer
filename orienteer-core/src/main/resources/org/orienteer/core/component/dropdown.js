@@ -1,4 +1,4 @@
-(function () {
+(function ($) {
     function ODropdown(container, currentItemText, prepareItemStrategy, generateCurrentItemStrategy) {
         this.container = container;
         this.prepareItem = prepareItemStrategy || defaultPrepareItemStrategy;
@@ -77,4 +77,4 @@
     $.fn.orienteerDropdown = function (currentItemText, prepareItemStrategy, generateCurrentItemStrategy) {
         return new ODropdown(this, currentItemText, prepareItemStrategy, generateCurrentItemStrategy);
     };
-})();
+})(jQuery);

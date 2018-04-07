@@ -13,7 +13,7 @@
         if (width !== this.screenWidth) {
             var self = this;
             self.screenWidth = width;
-            var dropdownTabs = self.computeDropdownTabs(self.tabs);
+            var dropdownTabs = $().computeODropdownItems(self.screenWidth, self.tabs);
             var panelTabs = self.tabs.slice(0, self.tabs.length - dropdownTabs.length);
             this.tabsContainer.find('li').each(function (i) {
                 if (i < panelTabs.length) {
@@ -27,20 +27,6 @@
             self.dropdown.setItems(self.prepareDropdownTabs(dropdownTabs));
             self.dropdown.render();
         }
-    };
-
-    OTabbedPanel.prototype.computeDropdownTabs = function (allTabs) {
-        var max = this.searchMaxTabWidth(allTabs);
-        var availableWidth = this.screenWidth - max - allTabs[0].width;
-        var i, computedWidth;
-        for (i = 1; i < allTabs.length; i++) {
-            computedWidth = availableWidth -= allTabs[i].width;
-            if (computedWidth <= 0) {
-                break;
-            }
-            availableWidth = computedWidth;
-        }
-        return i < allTabs.length ? allTabs.slice(i - 1) : [];
     };
 
     OTabbedPanel.prototype.prepareDropdownTabs = function (tabs) {
@@ -64,16 +50,6 @@
             });
         });
         return tabs;
-    };
-
-    OTabbedPanel.prototype.searchMaxTabWidth = function(tabs) {
-        var max = tabs[0].width;
-        tabs.forEach(function (t) {
-            if (t.width > max) {
-                max = t.width;
-            }
-        });
-        return max;
     };
 
     $.fn.tabbedPanel = function (options) {

@@ -4,12 +4,16 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.orienteer.core.component.ICommandsSupportComponent;
+import org.orienteer.core.component.TabbedPanel;
 import org.orienteer.core.component.command.Command;
 import org.orienteer.core.method.MethodsView;
 import org.orienteer.core.method.MethodPlace;
@@ -19,9 +23,11 @@ import org.orienteer.core.method.MethodPlace;
  *
  * @param <T> the type of a data table objects
  */
-public class DataTableCommandsToolbar<T> extends AbstractToolbar implements ICommandsSupportComponent<T>
-{
+public class DataTableCommandsToolbar<T> extends AbstractToolbar implements ICommandsSupportComponent<T> {
 	private static final long serialVersionUID = 1L;
+
+	public static final JavaScriptResourceReference ORIENTEER_COMMANDS_JS = new JavaScriptResourceReference(DataTableCommandsToolbar.class, "commands.js");
+
 	private RepeatingView commands;
     public DataTableCommandsToolbar(DataTable<T, ?> table)
     {
@@ -85,4 +91,10 @@ public class DataTableCommandsToolbar<T> extends AbstractToolbar implements ICom
 		setVisible(ret!=null?ret:false);
 	}
 
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
+		response.render(JavaScriptHeaderItem.forReference(TabbedPanel.ORIENTEER_DROPDOWN_JS));
+		response.render(JavaScriptHeaderItem.forReference(ORIENTEER_COMMANDS_JS));
+	}
 }

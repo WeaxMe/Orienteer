@@ -74,7 +74,75 @@
         return a;
     }
 
-    $.fn.orienteerDropdown = function (currentItemText, prepareItemStrategy, generateCurrentItemStrategy) {
-        return new ODropdown(this, currentItemText, prepareItemStrategy, generateCurrentItemStrategy);
+    function ODropdownSupportedComponent(container, controller) {
+        this.container = container;
+        this.screenWidth = null;
+        this.controller = controller;
+        this.items = this.controller.getItems(container);
+    }
+
+    ODropdownSupportedComponent.prototype.render = function () {
+        var width = $(window).width();
+        if (width !== this.screenWidth) {
+            var self = this;
+            self.screenWidth = width;
+            var dropdownTabs = self.computeODropdownItems(self.screenWidth, self.tabs);
+            var panelTabs = self.tabs.slice(0, self.tabs.length - dropdownTabs.length);
+            self.controller.getItemContainers().each(function (i) {
+                if (i < panelTabs.length) {
+                    var el = panelTabs[i].element;
+                    el.removeClass('dropdown-item');
+                    self.controller.prepareComponentItem(el);
+                    $(this).append(el);
+                }
+            });
+
+            self.dropdown.setItems(self.prepareDropdownTabs(dropdownTabs));
+            self.dropdown.render();
+        }
+    };
+
+    ODropdownSupportedComponent.prototype.computeODropdownItems = function (screenWidth, items) {
+        var max = this.searchMaxItemWidth(items);
+        var availableWidth = screenWidth - max - items[0].width;
+        var i, computedWidth;
+        for (i = 1; i < items.length; i++) {
+            computedWidth = availableWidth -= items[i].width;
+            if (computedWidth <= 0) {
+                break;
+            }
+            availableWidth = computedWidth;
+        }
+        return i < items.length ? items.slice(i - 1) : [];
+    };
+
+    ODropdownSupportedComponent.prototype.searchMaxItemWidth = function (items) {
+        var max = items[0].width;
+        items.forEach(function (item) {
+            if (item.width > max) {
+                max = item.width;
+            }
+        });
+        return max;
+    };
+
+    // ODropdownSupportedComponent.prototype.prepareComponentItem = function (item) {
+    //     return item;
+    // };
+    //
+    // ODropdownSupportedComponent.prototype.prepareDropdownItems = function (items) {
+    //     return [];
+    // };
+    //
+    // ODropdownSupportedComponent.prototype.getItems = function (container) {
+    //     return [];
+    // };
+    //
+    // ODropdownSupportedComponent.prototype.getItemContainers = function () {
+    //
+    // };
+
+    $.fn.orienteerDropdown = function (options) {
+        return new ODropdown(this, options.currentItemText, options.prepareItemStrategy, options.generateCurrentItemStrategy);
     };
 })(jQuery);

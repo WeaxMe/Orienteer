@@ -1,7 +1,5 @@
 package org.orienteer.core.component.command;
 
-import java.util.Optional;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -13,11 +11,12 @@ import org.orienteer.core.boot.loader.util.artifact.OArtifact;
 import org.orienteer.core.component.property.DisplayMode;
 import org.orienteer.core.component.table.OrienteerDataTable;
 import org.orienteer.core.component.table.OrienteerDataTable.MetaContextItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.ydn.wicket.wicketorientdb.security.OSecurityHelper;
 import ru.ydn.wicket.wicketorientdb.security.OrientPermission;
 import ru.ydn.wicket.wicketorientdb.security.RequiredOrientResource;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Command to save user's artifact
@@ -42,7 +41,7 @@ public class SaveOArtifactCommand extends AbstractSaveOArtifactCommand {
             public void component(MetaContextItem<OArtifact, ?> rowItem, IVisit<Void> visit) {
                 OArtifact module = rowItem.getModelObject();
                 if (isUserArtifactValid(targetOptional, module)) {
-                    OArtifact moduleForUpdate = new OArtifact(module.getPreviousArtifactRefence());
+                    OArtifact moduleForUpdate = new OArtifact(module.getPreviousArtifactRefence(), UUID.randomUUID().toString());
                     moduleForUpdate.setLoad(module.isLoad())
                             .setTrusted(module.isTrusted());
                     OrienteerClassLoaderUtil.updateOArtifactInMetadata(moduleForUpdate, module);

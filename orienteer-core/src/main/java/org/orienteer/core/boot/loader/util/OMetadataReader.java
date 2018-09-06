@@ -87,8 +87,12 @@ class OMetadataReader extends AbstractXmlUtil {
      */
     @SuppressWarnings("unchecked")
     private OArtifact getOoArtifact(Element mainElement) {
-        OArtifact module = new OArtifact();
         NodeList nodeList = mainElement.getElementsByTagName("*");
+        boolean load = false;
+        boolean trusted = false;
+        OArtifactReference reference = null;
+        String id = null;
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -96,18 +100,21 @@ class OMetadataReader extends AbstractXmlUtil {
                 MetadataTag tag = MetadataTag.getByName(element.getTagName());
                 switch (tag) {
                     case LOAD:
-                        module.setLoad(Boolean.valueOf(element.getTextContent()));
+                        load = Boolean.valueOf(element.getTextContent());
                         break;
                     case TRUSTED:
-                        module.setTrusted(Boolean.valueOf(element.getTextContent()));
+                        trusted = Boolean.valueOf(element.getTextContent());
                         break;
                     case DEPENDENCY:
-                        module.setArtifactReference(getMavenDependency(element));
+                        reference = getMavenDependency(element);
+                        break;
+                    case ID:
+                        id = element.getTextContent();
                         break;
                 }
             }
         }
-        return module;
+        return new OArtifact(reference, load, true, false, id);
     }
 
     /**
@@ -124,6 +131,7 @@ class OMetadataReader extends AbstractXmlUtil {
         String jar        = null;
         String repository = "";
         String description = "";
+        String id = "";
         NodeList nodeList = mainElement.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);

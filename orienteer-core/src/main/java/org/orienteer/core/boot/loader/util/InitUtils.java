@@ -32,6 +32,7 @@ class InitUtils {
     private static final String ORIENTEER_GROUP_ID           = "orienteer.groupId";
     private static final String ORIENTEER_ARTIFACT_ID        = "orienteer.artifactId";
     private static final String ORIENTEER_VERSION            = "orienteer.version";
+    private static final String ORIENTEER_METADATA           = "orienteer.metadata";
     private static final String METADATA_FILE                = "metadata.xml";
 
     private static final String DEFAULT_LIBS_FOLDER          = "libs/";
@@ -61,7 +62,8 @@ class InitUtils {
      */
     public Path getMetadataPath() {
         Path modulesFolder = getPathToModulesFolder();
-        return modulesFolder.resolve(METADATA_FILE);
+        String metadata = PROPERTIES.getProperty(ORIENTEER_METADATA);
+        return modulesFolder.resolve(!Strings.isEmpty(metadata) ? metadata : METADATA_FILE);
     }
 
     /**

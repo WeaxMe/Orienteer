@@ -2,23 +2,21 @@ package org.orienteer.core.boot.loader.util;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.resolution.ArtifactDescriptorException;
-import org.eclipse.aether.resolution.ArtifactResult;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.orienteer.core.boot.loader.util.artifact.OArtifact;
 import org.orienteer.core.boot.loader.util.artifact.OArtifactReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.orienteer.core.boot.loader.util.OrienteerClassLoaderUtil.resolvingDependenciesRecursively;
 
@@ -107,7 +105,7 @@ public class MavenResolver {
         artifactReference.setArtifactId(UNKNOWN_ARTIFACT_ID + file.getFileName());
         artifactReference.setVersion(UNKNOWN_VERSION + file.getFileName());
         artifactReference.setFile(file.toFile());
-        return new OArtifact(artifactReference).setLoad(true);
+        return new OArtifact(artifactReference, UUID.randomUUID().toString()).setLoad(true);
     }
 
     private OArtifact getOArtifact(String group, String artifact, String version,
@@ -122,7 +120,7 @@ public class MavenResolver {
         if (mainArtifact == null) return null;
         List<Artifact> artifacts = resolveDependenciesInArtifacts(groupArtifactVersion);
 
-        OArtifact moduleMetadata = new OArtifact();
+        OArtifact moduleMetadata = new OArtifact(UUID.randomUUID().toString());
         moduleMetadata.setLoad(true)
                 .setArtifactReference(mainArtifact)
                 .setDependencies(toOArtifactDependencies(artifacts));

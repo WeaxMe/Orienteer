@@ -10,7 +10,6 @@ import org.apache.wicket.util.io.IOUtils;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
-import org.eclipse.aether.resolution.ArtifactResult;
 import org.orienteer.core.boot.loader.util.artifact.OArtifact;
 import org.orienteer.core.boot.loader.util.artifact.OArtifactReference;
 import org.slf4j.Logger;
@@ -50,6 +49,18 @@ public abstract class OrienteerClassLoaderUtil {
 
     public static void reindex() {
         aetherUtils = new AetherUtils(initUtils);
+    }
+
+    public static void synchronizeArtifacts() {
+        List<OArtifact> artifacts = getOArtifactsMetadataAsList();
+        List<OArtifact> notPresent = OArtifactDbUtils.getNotPresentArtifactsIn(artifacts);
+        updateOArtifactsInMetadata(notPresent);
+    }
+
+    public static void saveArtifactsInDatabase() {
+        List<OArtifact> artifacts = getOArtifactsMetadataAsList();
+        OArtifactDbUtils.getNotPresentArtifactsIn(artifacts);
+
     }
 
     /**
@@ -448,21 +459,26 @@ public abstract class OrienteerClassLoaderUtil {
      * Add artifact jar file to temp folder
      * @param artifactName artifact name
      * @param fileUpload {@link FileUpload} of artifact's jar
-     * @return {@link File} of artifact's jar file or Optional.absent() if can't add artifact's jar file to folder
+     * @return {@link Optional<File>} of artifact's jar file or Optional.absent() if can't add artifact's jar file to folder
      * @throws IllegalArgumentException if artifactName is null or empty. Or when fileUpload is null.
      */
-    public static File createJarTempFile(String artifactName, FileUpload fileUpload) {
+    public static Optional<File> createJarTempFile(String artifactName, FileUpload fileUpload) {
         Args.notEmpty(artifactName, "artifactName");
         Args.notNull(fileUpload, "fileUpload");
-        String fileName = fileUpload.getClientFileName();
+        return createJarTempFile(artifactName, fileUpload.getClientFileName(), fileUpload.getBytes());
+    }
+
+    public static Optional<File> createJarTempFile(String artifactName, String fileName, byte[] bytes) {
+        Args.notEmpty(artifactName, "artifactName");
+        Args.notNull(bytes, "bytes");
         try {
             File file = File.createTempFile(fileName.replaceAll("\\.jar", ""), ".jar");
-            fileUpload.writeTo(file);
-            return file;
+            Files.write(file.toPath(), bytes);
+            return Optional.of(file);
         } catch (Exception e) {
             LOG.error("Cannot upload file: {}", fileName, e);
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

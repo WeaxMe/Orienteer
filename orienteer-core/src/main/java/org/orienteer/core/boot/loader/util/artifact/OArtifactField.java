@@ -17,7 +17,8 @@ public enum OArtifactField implements Serializable {
     REPOSITORY("repository"),
     TRUSTED("trusted"),
     LOAD("load"),
-    DOWNLOADED("downloaded");
+    DOWNLOADED("downloaded"),
+    ID("id");
 
     private final String field;
 

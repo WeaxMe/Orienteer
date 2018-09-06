@@ -123,6 +123,7 @@ public final class OrienteerFilter implements Filter {
     	if(!reloading) {
 	        LOG.info("Start reload doOrienteerFilter with doOrienteerFilter config: " + filterConfig);
 	        reloading = true;
+	        OrienteerClassLoaderUtil.synchronizeArtifacts();
 	        destroy();
 	        try {
 				Thread.currentThread().sleep(wait);

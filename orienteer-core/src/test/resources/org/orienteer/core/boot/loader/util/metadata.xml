@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<metadata>
+    <module>
+        <load>true</load>
+        <trusted>true</trusted>
+        <dependency>
+            <groupId>org.orienteer</groupId>
+            <artifactId>orienteer-architect</artifactId>
+            <version>1.4-SNAPSHOT</version>
+            <description>UI for easy and quick data models designing</description>
+        </dependency>
+    </module>
+    <module>
+        <load>true</load>
+        <trusted>true</trusted>
+        <dependency>
+            <groupId>org.orienteer</groupId>
+            <artifactId>orienteer-devutils</artifactId>
+            <version>1.4-SNAPSHOT</version>
+            <description>Module for developers</description>
+        </dependency>
+    </module>
+    <module>
+        <load>true</load>
+        <trusted>false</trusted>
+        <dependency>
+            <groupId>org.orienteer</groupId>
+            <artifactId>orienteer-pages</artifactId>
+            <version>1.4-SNAPSHOT</version>
+        <description/>
+    </dependency>
+</module>
+</metadata>

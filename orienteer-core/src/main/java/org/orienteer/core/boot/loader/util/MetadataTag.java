@@ -18,6 +18,7 @@ enum MetadataTag {
     JAR("jar"),
     DESCRIPTION("description"),
     REPOSITORY("repository"),
+    ID("id"),
     EMPTY_TAG(" ");
 
     private final String tag;

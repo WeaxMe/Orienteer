@@ -13,6 +13,7 @@ import org.orienteer.core.boot.loader.util.artifact.OArtifactReference;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,7 +29,7 @@ public class OMetadataTest {
         OrienteerClassLoaderUtil.deleteMetadataFile();
         Artifact artifact = new DefaultArtifact("org.company:artifact:1.0");
         artifact = artifact.setFile(new File("module.jar"));
-        metadata = new OArtifact();
+        metadata = new OArtifact(UUID.randomUUID().toString());
         metadata.setArtifactReference(OArtifactReference.valueOf(artifact));
         metadata.setLoad(true);
         metadata.setTrusted(true);
@@ -56,14 +57,14 @@ public class OMetadataTest {
     public void addListAndDeleteToMetadata() throws Exception {
         Artifact artifact1 = new DefaultArtifact("org.orienteer:orienteer-core:1.3-SNAPSHOT");
         artifact1 = artifact1.setFile(new File("orienteer-core.jar"));
-        OArtifact oArtifact1 = new OArtifact();
+        OArtifact oArtifact1 = new OArtifact(UUID.randomUUID().toString());
         oArtifact1.setArtifactReference(OArtifactReference.valueOf(artifact1));
         oArtifact1.setLoad(true);
         oArtifact1.setTrusted(true);
 
         Artifact artifact2 = new DefaultArtifact("org.orienteer:devutils:1.3-SNAPSHOT");
         artifact2 = artifact2.setFile(new File("orienteer-devutils.jar"));
-        OArtifact oArtifact2 = new OArtifact();
+        OArtifact oArtifact2 = new OArtifact(UUID.randomUUID().toString());
         oArtifact2.setArtifactReference(OArtifactReference.valueOf(artifact2));
         oArtifact2.setLoad(true);
         oArtifact2.setTrusted(true);

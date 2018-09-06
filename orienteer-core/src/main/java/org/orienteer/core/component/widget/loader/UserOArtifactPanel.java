@@ -101,11 +101,9 @@ public class UserOArtifactPanel extends GenericPanel<OArtifact> {
                         uploadField.add(new AjaxFormSubmitBehavior("change") {
                             @Override
                             protected void onSubmit(AjaxRequestTarget target) {
-                                File jarFile = getJarFile(uploadField);
-                                if (jarFile == null) {
-                                    errorFeedback();
-                                } else {
-                                    OArtifact module = OrienteerClassLoaderUtil.getOArtifactFromJar(jarFile.toPath());
+                                Optional<File> jarFile = getJarFile(uploadField);
+                                if (jarFile.isPresent()) {
+                                    OArtifact module = OrienteerClassLoaderUtil.getOArtifactFromJar(jarFile.get().toPath());
                                     if (module != null) {
                                         getEntityModel().setObject(module);
                                         structureTable.getModel().setObject(module);
@@ -114,6 +112,8 @@ public class UserOArtifactPanel extends GenericPanel<OArtifact> {
                                     } else {
                                         errorFeedback();
                                     }
+                                } else {
+                                    errorFeedback();
                                 }
                                 target.add(feedback);
                                 structureTable.onAjaxUpdate(target);
@@ -153,11 +153,11 @@ public class UserOArtifactPanel extends GenericPanel<OArtifact> {
     }
 
     @SuppressWarnings("unchecked")
-    private File getJarFile(FileUploadField fileUploadField) {
+    private Optional<File> getJarFile(FileUploadField fileUploadField) {
         FileUpload fileUpload = fileUploadField.getFileUpload();
-        if (fileUpload == null) return null;
+        if (fileUpload == null) return Optional.empty();
         String clientFileName = fileUpload.getClientFileName();
-        if (!fileUpload.getClientFileName().endsWith(".jar")) return null;
+        if (!fileUpload.getClientFileName().endsWith(".jar")) return Optional.empty();
         return OrienteerClassLoaderUtil.createJarTempFile(clientFileName, fileUpload);
     }
 

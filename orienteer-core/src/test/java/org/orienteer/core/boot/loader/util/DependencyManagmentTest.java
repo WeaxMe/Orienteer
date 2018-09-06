@@ -11,6 +11,7 @@ import org.orienteer.core.boot.loader.util.artifact.OArtifactReference;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -64,7 +65,7 @@ public class DependencyManagmentTest {
         assertNotNull("Downloaded artifact can't be null", artifact);
         assertNotNull("Jar file of downloaded artifact can't be null", artifact.getFile());
         OArtifactReference reference = OArtifactReference.valueOf(artifact);
-        OArtifact oArtifact = new OArtifact(reference);
+        OArtifact oArtifact = new OArtifact(reference, UUID.randomUUID().toString());
         assertTrue("Jar file of OArtifact must exist", oArtifact.getArtifactReference().getFile().exists());
         deleteOArtifact(oArtifact);
     }
@@ -101,7 +102,7 @@ public class DependencyManagmentTest {
             assertNotNull("Can't resolve Orienteer module: " + artifact, downloadedArtifact);
             assertTrue("Downloaded modules jar file can't be null and must exists: " + downloadedArtifact,
                     downloadedArtifact.getFile() != null && downloadedArtifact.getFile().exists());
-            result.add(new OArtifact(OArtifactReference.valueOf(downloadedArtifact)));
+            result.add(new OArtifact(OArtifactReference.valueOf(downloadedArtifact), UUID.randomUUID().toString()));
         }
         return result;
     }

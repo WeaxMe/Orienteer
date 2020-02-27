@@ -1,4 +1,4 @@
-package org.orienteer.taucharts.component;
+package org.orienteer.taucharts.model;
 
 import java.util.ArrayList;
 import java.util.Collection;

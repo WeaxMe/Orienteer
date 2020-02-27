@@ -1,10 +1,10 @@
 package org.orienteer.taucharts.component.panel;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.github.openjson.JSONArray;
+import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import de.agilecoders.wicket.webjars.request.resource.WebjarsCssResourceReference;
+import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -17,17 +17,15 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.template.PackageTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;
 import org.orienteer.core.util.CommonUtils;
-import org.orienteer.taucharts.component.TauchartsConfig;
+import org.orienteer.taucharts.model.TauchartsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.github.openjson.JSONArray;
-import com.orientechnologies.orient.core.record.impl.ODocument;
-import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-
-import de.agilecoders.wicket.webjars.request.resource.WebjarsCssResourceReference;
-import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
 import ru.ydn.wicket.wicketorientdb.model.ODocumentWrapperModel;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Panel for display chart from <a href="https://www.taucharts.com/">https://www.taucharts.com/</a>

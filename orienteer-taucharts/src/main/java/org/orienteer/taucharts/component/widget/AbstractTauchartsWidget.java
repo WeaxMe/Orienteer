@@ -6,7 +6,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.orienteer.core.component.FAIcon;
 import org.orienteer.core.component.FAIconType;
 import org.orienteer.core.widget.AbstractWidget;
-import org.orienteer.taucharts.component.AbstractTauchartsPanel;
+import org.orienteer.taucharts.component.panel.AbstractTauchartsPanel;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
 

@@ -10,6 +10,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
 import org.orienteer.core.module.OWidgetsModule;
 import org.orienteer.core.util.CommonUtils;
+import org.orienteer.taucharts.component.panel.AbstractTauchartsPanel;
 import org.orienteer.taucharts.component.widget.AbstractTauchartsWidget;
 
 import com.google.common.collect.Collections2;

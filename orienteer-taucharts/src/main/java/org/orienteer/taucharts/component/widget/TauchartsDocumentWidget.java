@@ -3,7 +3,7 @@ package org.orienteer.taucharts.component.widget;
 import org.apache.wicket.model.IModel;
 import org.orienteer.core.widget.Widget;
 import org.orienteer.taucharts.component.TauchartsConfig;
-import org.orienteer.taucharts.component.AbstractTauchartsPanel;
+import org.orienteer.taucharts.component.panel.AbstractTauchartsPanel;
 
 import com.orientechnologies.orient.core.metadata.schema.OClass;
 import com.orientechnologies.orient.core.metadata.schema.OProperty;

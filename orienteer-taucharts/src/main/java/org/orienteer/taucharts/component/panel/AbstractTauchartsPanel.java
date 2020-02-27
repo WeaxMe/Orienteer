@@ -1,4 +1,4 @@
-package org.orienteer.taucharts.component;
+package org.orienteer.taucharts.component.panel;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,6 +17,7 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.template.PackageTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;
 import org.orienteer.core.util.CommonUtils;
+import org.orienteer.taucharts.component.TauchartsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

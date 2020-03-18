@@ -21,7 +21,8 @@
 	<artifactId>orienteer-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>1.5-SNAPSHOT</version>
-	<name>Orienteer</name>
+
+    <name>Orienteer</name>
 	<description>Orienteer - Business Application Platform</description>
 	<url>http://orienteer.org</url>
 	<scm>
@@ -445,6 +446,7 @@
 				<module>orienteer-object</module>
 				<module>orienteer-tours</module>
 				<module>orienteer-metrics</module>
+				<module>orienteer-analytics</module>
 			</modules>
 		</profile>
 	    <profile> 

@@ -2,6 +2,7 @@ package org.orienteer.core.dao;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.type.ODocumentWrapper;
+import org.orienteer.core.OrienteerWebApplication;
 
 import java.io.Serializable;
 
@@ -9,7 +10,11 @@ import java.io.Serializable;
  * Interface which mirror methods of {@link ODocumentWrapper} 
  */
 public interface IODocumentWrapper extends Serializable {
-	
+
+	static <T extends IODocumentWrapper> T get(Class<T> wrapperClass) {
+		return OrienteerWebApplication.lookupApplication().getServiceInstance(wrapperClass);
+	}
+
 	void fromStream(final ODocument iDocument);
 	ODocument toStream();
 	<R extends IODocumentWrapper> R load();

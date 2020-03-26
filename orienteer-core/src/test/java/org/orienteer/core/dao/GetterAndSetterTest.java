@@ -25,11 +25,17 @@ public class GetterAndSetterTest {
 
     helper.oClass("TestModel")
       .oProperty("integer", OType.INTEGER)
+            .defaultValue("0")
       .oProperty("short", OType.SHORT)
+            .defaultValue("0")
       .oProperty("long", OType.LONG)
+            .defaultValue("0")
       .oProperty("float", OType.FLOAT)
+            .defaultValue("0")
       .oProperty("double", OType.DOUBLE)
-      .oProperty("byte", OType.BYTE);
+            .defaultValue("0")
+      .oProperty("byte", OType.BYTE)
+            .defaultValue("0");
   }
 
   @After

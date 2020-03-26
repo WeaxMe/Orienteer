@@ -17,7 +17,7 @@ import java.util.Optional;
 public class ODocumentWrapperGetterAndSetterHandler implements IMethodHandler<ODocumentWrapper> {
 
   private static final List<ODocumentFieldHandler> GETTER_AND_SETTERS = Arrays.asList(
-          new NumberHandler()
+          new PureGetterAndSetter()
   );
 
   @Override
@@ -69,6 +69,10 @@ public class ODocumentWrapperGetterAndSetterHandler implements IMethodHandler<OD
 
     protected final Class<?>[] supportedTypes;
 
+    public AbstractDocumentFieldHandler() {
+      this(new Class<?>[0]);
+    }
+
     public AbstractDocumentFieldHandler(OType...supportedTypes) {
       this(toDefaultJavaClasses(supportedTypes));
     }
@@ -87,6 +91,10 @@ public class ODocumentWrapperGetterAndSetterHandler implements IMethodHandler<OD
 
     @Override
     public boolean isSupported(Class<?> type) {
+      if (supportedTypes.length == 0) {
+        return true;
+      }
+
       for (Class<?> supportedType : supportedTypes) {
         if (supportedType.equals(type) || supportedType.isAssignableFrom(type)) {
           return true;
@@ -95,6 +103,22 @@ public class ODocumentWrapperGetterAndSetterHandler implements IMethodHandler<OD
       return false;
     }
 
+  }
+
+  protected static class PureGetterAndSetter extends AbstractDocumentFieldHandler {
+    public PureGetterAndSetter() {
+      super();
+    }
+
+    @Override
+    public Object get(ODocument document, String field, Class<?> type) {
+      return document.field(field, type);
+    }
+
+    @Override
+    public void set(ODocument document, String field, Object value) {
+      document.field(field, value);
+    }
   }
 
   protected static abstract class PureSetter extends AbstractDocumentFieldHandler {
